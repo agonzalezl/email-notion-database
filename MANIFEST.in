@@ -1,0 +1,1 @@
+recursive-include email_notion_database ./templates/*.html

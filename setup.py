@@ -26,4 +26,5 @@ setup(
         "Operating System :: OS Independent",
     ],
     package_data={"email_notion_database": ["py.typed"]},
+    include_package_data=True,
 )
