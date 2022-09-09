@@ -41,7 +41,7 @@ def get_database_rows(token: str, notion_database_id: str, number_of_rows: int) 
         elements = elements + db_elements
         if len(elements) > number_of_rows:
             break
-    return elements[0:min(len(elements)-1,number_of_rows-1)]
+    return elements[0:min(len(elements),number_of_rows)]
 
 def send_email(elements: List[DataBaseRow], email_server: str, email_address: str, sender_name: str, sender_password: str, email_port: int, target_address: str, subject: str, title:str, header: str) -> None:
     

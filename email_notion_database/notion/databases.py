@@ -1,5 +1,6 @@
 from typing import List
 import random
+from unittest import result
 
 import email_notion_database.notion
 from email_notion_database.notion.row import DataBaseRow
@@ -25,6 +26,6 @@ def get_elements(database_id: str, max_elements: int = None, shuffle: bool=False
     element_list = []
     for element_dict in results:
         element_list.append(DataBaseRow.from_dict(element_dict))
-        if max_elements is not None and max_elements >= len(element_list):
+        if max_elements is not None and len(element_list) >= max_elements:
             break
     return element_list
