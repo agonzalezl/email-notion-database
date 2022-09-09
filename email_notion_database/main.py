@@ -26,19 +26,19 @@ parser.add_argument('-su', '--subject', help="Email subject", type=str)
 parser.add_argument('-ta', '--target-address', help="Target address", type=str)
 parser.add_argument('-et', '--email-title', help="Email title", type=str)
 parser.add_argument('-eh', '--email-header', help="Email header", type=str)
+parser.add_argument('-nr', '--number-rows', help="Number or rows to send", type=str)
 
-def get_database_rows(token: str, ) -> List[DataBaseRow]:
-    max_number_rows = 5
+def get_database_rows(token: str, number_of_rows: int) -> List[DataBaseRow]:
     email_notion_database.notion.init_client(token)
     database_list = email_notion_database.notion.databases.get_list()
     elements = []
-    for db in database_list[0:min(len(database_list)-1,max_number_rows)]:
-        db_elements = email_notion_database.notion.databases.get_elements(db.get('id'))
+    for db in database_list:
+        db_elements = email_notion_database.notion.databases.get_elements(db.get('id'), number_of_rows)
         elements = elements + db_elements
-        if len(elements) > max_number_rows:
+        if len(elements) > number_of_rows:
             break
     random.shuffle(elements)
-    return elements[0:min(len(elements)-1,max_number_rows-1)]
+    return elements[0:min(len(elements)-1,number_of_rows-1)]
 
 def send_email(elements: List[DataBaseRow], email_server: str, email_address: str, sender_name: str, sender_password: str, email_port: int, target_address: str, subject: str, title:str, header: str) -> None:
     
@@ -46,8 +46,18 @@ def send_email(elements: List[DataBaseRow], email_server: str, email_address: st
     html, plain = composer.compose_content(elements, Email(title=title, header=header))
     email_notion_database.email_client.send_email(target_address, html, plain, subject=subject)
 
-def get_database_send_email(notion_token: str, email_server: str, email_address: str, sender_name: str, sender_password: str, email_port: int, target_address: str, subject: str, title:str, header: str):
-    elements = get_database_rows(notion_token)
+def get_database_send_email(notion_token: str,
+        email_server: str,
+        email_address: str,
+        sender_name: str,
+        sender_password: str,
+        email_port: int,
+        target_address: str,
+        subject: str,
+        title:str,
+        header: str,
+        number_of_rows: int=5):
+    elements = get_database_rows(notion_token, number_of_rows)
     send_email(elements, email_server, email_address, sender_name, sender_password, email_port, target_address, subject, title, header )
 
 def main(arguments):
@@ -63,8 +73,9 @@ def main(arguments):
     target_address = mandatory(args.target_address)
     title = mandatory(args.email_title)
     header = mandatory(args.email_header)
+    number_rows = int(args.number_rows) or 5
 
-    get_database_send_email(token, email_server, email_address, sender_name, sender_password, email_port, target_address, subject, title, header)
+    get_database_send_email(token, email_server, email_address, sender_name, sender_password, email_port, target_address, subject, title, header, number_rows)
 
 
 class MissingParameterError(Exception):
