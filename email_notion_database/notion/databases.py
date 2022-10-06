@@ -1,8 +1,9 @@
-from typing import List
+from typing import List, Dict, Any
 import random
 from unittest import result
 
 import email_notion_database.notion
+from email_notion_database.notion.database import DataBase
 from email_notion_database.notion.row import DataBaseRow
 
 
@@ -15,10 +16,13 @@ def get_list()-> List:
             database_list.append(notion_object)
     return database_list
 
-def get_elements(database_id: str, max_elements: int = None, shuffle: bool=False)-> List[DataBaseRow]:
+def get(database_id: str)-> Any:
+    return email_notion_database.notion.client.databases.retrieve(database_id)
+
+def get_elements(database_id: str, max_elements: int = None, shuffle: bool=False, filter: Dict = None)-> List[DataBaseRow]:
     response = email_notion_database.notion.client.databases.query(
         database_id=database_id,
-
+        filter=filter
     )
     results = response.get("results")
     if shuffle:
