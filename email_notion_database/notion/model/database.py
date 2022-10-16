@@ -10,7 +10,6 @@ class DataBase:
     """Local class for Notion db"""
     properties: List[DataBaseProperty]
 
-
     @classmethod
     def from_dict(cls: type, notion_dict: dict):
         properties = []

@@ -8,7 +8,7 @@ from typing import Any, List, Dict
 
 import email_notion_database.notion
 import email_notion_database.email_client
-from email_notion_database.notion.row import DataBaseRow
+from email_notion_database.notion.model.rows import DataBaseRow
 from email_notion_database.model.email import Email
 
 from . import composer

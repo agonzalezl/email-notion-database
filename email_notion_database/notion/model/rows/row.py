@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pathlib import Path
 from typing import List, Any, Optional
 from email_notion_database.utils import retrieve_url_preview
 from email_notion_database.notion.pages import get_page, get_page_content
@@ -14,6 +15,11 @@ class DataBaseRow:
     url_description: str
     url_image: str
     url_favicon: str
+
+    __template_path: str = Path(__file__).parent.parent.parent.parent / "./templates/figure.html"
+
+    def get_template_path(self)->str:
+        return self.__template_path
 
     @classmethod
     def from_dict(cls: type, notion_dict: dict):
@@ -50,4 +56,3 @@ class DataBaseRow:
                 continue
             return property_object
         return None
-

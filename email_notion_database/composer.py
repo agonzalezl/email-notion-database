@@ -1,8 +1,8 @@
 
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
-from email_notion_database.notion.row import DataBaseRow
+from email_notion_database.notion.model.rows import DataBaseRow
 from email_notion_database.model import Email
 
 def compose_content(database_rows: List[DataBaseRow], email_data: Email):
@@ -11,7 +11,7 @@ def compose_content(database_rows: List[DataBaseRow], email_data: Email):
     figure_list = ""
     plain_list = ""
     for row in database_rows:
-        figure = load_figure_template()
+        figure = load_figure_template(row.get_template_path())
         figure_html, plain = populate_figure_fields(figure, row)
         figure_list += figure_html
         plain_list += "\n" + plain
@@ -19,9 +19,9 @@ def compose_content(database_rows: List[DataBaseRow], email_data: Email):
     email_html = email_html.replace("{{email_content}}", figure_list)
     return email_html, plain_list
 
-def load_figure_template():
-    path = Path(__file__).parent / "./templates/figure.html"
-    return path.open().read()
+def load_figure_template(path: Optional[Path] = None):
+    _path = path or Path(__file__).parent / "./templates/figure.html"
+    return _path.open().read()
 
 def load_email_template():
     path = Path(__file__).parent / "./templates/email.html"

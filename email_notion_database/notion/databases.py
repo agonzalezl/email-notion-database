@@ -3,8 +3,8 @@ import random
 from unittest import result
 
 import email_notion_database.notion
-from email_notion_database.notion.database import DataBase
-from email_notion_database.notion.row import DataBaseRow
+from email_notion_database.notion.model.database import DataBase
+from email_notion_database.notion.model.rows import DataBaseRow
 
 
 def get_list()-> List:
@@ -17,7 +17,7 @@ def get_list()-> List:
     return database_list
 
 def get(database_id: str)-> Any:
-    return email_notion_database.notion.client.databases.retrieve(database_id)
+    return DataBase.from_dict(email_notion_database.notion.client.databases.retrieve(database_id))
 
 def get_elements(database_id: str, max_elements: int = None, shuffle: bool=False, filter: Dict = None)-> List[DataBaseRow]:
     response = email_notion_database.notion.client.databases.query(
